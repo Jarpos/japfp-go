@@ -1,4 +1,5 @@
 # japfp-go - Just Another PixelFlut Programm - GoLang
+A client for the "[Pixelflut: Multiplayer canvas](https://github.com/defnull/pixelflut)".
 
 ## Ideas
 - Edge detection and then draw the Edges in a seperate thread from the rest to make the image more visible quicker
