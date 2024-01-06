@@ -4,9 +4,10 @@ import (
 	"Jarpos/japfp-go/communication"
 	"fmt"
 	"net"
-	"time"
+	"os"
 
-	_ "image"
+	"image"
+	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
 )
@@ -32,26 +33,27 @@ func main() {
 	fmt.Printf("Connection to %s:%s established\n", SERVER_HOST, SERVER_PORT)
 	fmt.Printf("Canvas size %dx%d (%d pixels)\n", x, y, x*y)
 
-	writeScreen(connection, x, y)
+	img, _ := readImage(os.Args[1])
+	writeScreen(connection, x, y, func(x int, y int) color.Color {
+		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
+	})
 }
 
-func writeScreen(connection net.Conn, x int, y int) {
+func writeScreen(connection net.Conn, x int, y int, f func(int, int) color.Color) {
 	for i := 0; i < x; i++ {
 		for j := 0; j < y; j++ {
-			communication.WritePixel(
-				// connection, i, j, makeColor(uint8(i), uint8(j), uint8(time.Now().UnixMilli())))
-				// connection, i, j, rgb)
-				// connection, i, j, makeColor64(time.Now().UnixNano(), time.Now().UnixNano(), time.Now().UnixNano()))
-				connection, i, j, makeColor64(time.Now().UnixMicro(), time.Now().UnixMicro(), time.Now().UnixMicro()))
-			// connection, i, j, makeColor64(time.Now().UnixMilli(), time.Now().UnixMilli(), time.Now().UnixMilli()))
+			communication.WritePixel(connection, i, j, f(i, j))
 		}
 	}
 }
 
-func makeColor(r uint8, g uint8, b uint8) uint32 {
-	return (uint32(r) << 16) | (uint32(g) << 8) | uint32(b)
-}
+func readImage(path string) (image.Image, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
 
-func makeColor64(r int64, g int64, b int64) uint32 {
-	return makeColor(uint8(r), uint8(g), uint8(b))
+	image, _, err := image.Decode(f)
+	return image, err
 }
