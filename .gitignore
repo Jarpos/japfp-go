@@ -1,0 +1,10 @@
+pixelflut/
+
+# GoLang Files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+go.work
