@@ -34,9 +34,11 @@ func main() {
 	fmt.Printf("Canvas size %dx%d (%d pixels)\n", x, y, x*y)
 
 	img, _ := readImage(os.Args[1])
-	writeScreen(connection, x, y, func(x int, y int) color.Color {
+	fn := func(x int, y int) color.Color {
 		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
-	})
+	}
+
+	writeScreen(connection, x, y, fn)
 }
 
 func writeScreen(connection net.Conn, x int, y int, f func(int, int) color.Color) {
