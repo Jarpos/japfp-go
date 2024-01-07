@@ -59,11 +59,13 @@ func (s *Server) read() (string, error) {
 
 		str += string(buffer[:length])
 		if str[len(str)-1] == '\n' {
-			break
+			// TODO: Find a better way to find out if it's '\n' or '\r\n'
+			if str[len(str)-2] == '\r' {
+				return str[:len(str)-2], nil
+			}
+			return str[:len(str)-1], nil
 		}
 	}
-
-	return str[:len(str)-1], nil
 }
 
 func (s *Server) write(payload string) {
