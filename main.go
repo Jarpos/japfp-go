@@ -23,9 +23,9 @@ func main() {
 	fmt.Printf("Connection to %s established\n", server.Host.String())
 	fmt.Printf("Canvas size %dx%d (%d pixels)\n", server.SizeX, server.SizeY, server.SizeX*server.SizeY)
 
-	img, _ := readImage(os.Args[1])
-	fn := func(x int, y int) color.Color {
-		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
+	img, err := readImage(os.Args[1])
+	if err != nil {
+		panic(err)
 	}
 
 	writer.WriteTiling(server, img)
