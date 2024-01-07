@@ -30,7 +30,8 @@ func main() {
 		panic(err)
 	}
 
-	writer.WriteTiling(server, img)
+	writer.ChanneledTiling(server, img)
+	// writer.WriteTiling(server, img)
 
 	elapsed := time.Since(start)
 	println("took:", elapsed.Milliseconds(), "ms")
