@@ -2,11 +2,11 @@ package main
 
 import (
 	"Jarpos/japfp-go/communication"
+	"Jarpos/japfp-go/writer"
 	"fmt"
 	"os"
 
 	"image"
-	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
 )
@@ -28,15 +28,7 @@ func main() {
 		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
 	}
 
-	writeScreen(server, server.SizeX, server.SizeY, fn)
-}
-
-func writeScreen(s communication.Server, x int, y int, f func(int, int) color.Color) {
-	for i := 0; i < x; i++ {
-		for j := 0; j < y; j++ {
-			communication.WritePixel(s, i, j, f(i, j))
-		}
-	}
+	writer.WriteTiling(server, img)
 }
 
 func readImage(path string) (image.Image, error) {
