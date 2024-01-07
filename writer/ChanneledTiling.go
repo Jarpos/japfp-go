@@ -2,6 +2,7 @@ package writer
 
 import (
 	"Jarpos/japfp-go/communication"
+	"fmt"
 	"sync"
 
 	"image"
@@ -16,24 +17,22 @@ func ChanneledTiling(s communication.Server, img image.Image) {
 	tilesX := (s.SizeX / img.Bounds().Max.X) + 1
 	tilesY := (s.SizeY / img.Bounds().Max.Y) + 1
 
-	var wg sync.WaitGroup
-	sid := 0
-	servers := GetServers((tilesX * tilesY) + 1)
+	servers := GetServers(tilesX * tilesY)
+	fmt.Printf("Writing %d tiles x=%d, y=%d\n", len(servers), tilesX, tilesY)
 
-	for i := 0; i < tilesX; i++ {
-		x := i
-		for j := 0; j < tilesY; j++ {
-			y := j
-			wg.Add(1)
-			go func(id int) {
+	var wg sync.WaitGroup
+	wg.Add(len(servers))
+
+	for x := 0; x < tilesX; x++ {
+		for y := 0; y < tilesY; y++ {
+			go func(wg *sync.WaitGroup, sid int, x, y int) {
 				defer wg.Done()
 				WriteTile(
-					servers[id], f,
+					servers[sid], f,
 					crect(x*img.Bounds().Dx(), y*img.Bounds().Dy()),
 					crect(img.Bounds().Dx(), img.Bounds().Dy()),
 				)
-			}(sid)
-			sid++
+			}(&wg, y*tilesX+x, x, y)
 		}
 	}
 
