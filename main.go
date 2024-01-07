@@ -34,7 +34,7 @@ func main() {
 	// writer.WriteTiling(server, img)
 
 	elapsed := time.Since(start)
-	println("took:", elapsed.Milliseconds(), "ms")
+	fmt.Printf("Time taken: %dms (roughly)\n", elapsed.Milliseconds())
 }
 
 func readImage(path string) (image.Image, error) {
