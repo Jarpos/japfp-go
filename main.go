@@ -5,6 +5,7 @@ import (
 	"Jarpos/japfp-go/writer"
 	"fmt"
 	"os"
+	"time"
 
 	"image"
 	_ "image/jpeg"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	start := time.Now()
 	server := communication.CreateServer(127, 0, 0, 1, 1337)
 
 	err := server.Connect()
@@ -29,6 +31,9 @@ func main() {
 	}
 
 	writer.WriteTiling(server, img)
+
+	elapsed := time.Since(start)
+	println("took:", elapsed.Milliseconds(), "ms")
 }
 
 func readImage(path string) (image.Image, error) {
