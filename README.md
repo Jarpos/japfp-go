@@ -12,9 +12,10 @@ Note: I'm throwing around the terms "thread" and "concurrency" with little regar
 
 ## Features
 - [ ] Basic features:
-  - [ ] Read image from filesystem
-  - [ ] Write image to pixelflut server
+  - [X] Read image from filesystem
+  - [X] Write image to pixelflut server
   - [ ] Scale image
+  - [ ] Support transparency
 - [ ] Advanced stuff
   - [ ] Decide which ideas to implement
   - [ ] Implement them
