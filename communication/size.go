@@ -2,20 +2,19 @@ package communication
 
 import (
 	"fmt"
-	"net"
 	"strconv"
 	"strings"
 )
 
-func GetSize(connection net.Conn) (int, int, error) {
-	write(connection, "SIZE\n")
+func GetSize(s Server) (int, int, error) {
+	s.write("SIZE\n")
 
-	s, err := read(connection)
+	size, err := s.read()
 	if err != nil {
 		return -1, -1, err
 	}
 
-	return parseSize(s)
+	return parseSize(size)
 }
 
 func parseSize(s string) (int, int, error) {

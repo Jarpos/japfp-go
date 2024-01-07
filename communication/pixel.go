@@ -3,23 +3,22 @@ package communication
 import (
 	"fmt"
 	"image/color"
-	"net"
 )
 
-func ReadPixel(connection net.Conn, x int, y int) error {
-	write(connection, fmt.Sprintf("PX %d %d\n", x, y))
+func ReadPixel(s Server, x int, y int) error {
+	s.write(fmt.Sprintf("PX %d %d\n", x, y))
 
-	s, err := read(connection)
+	str, err := s.read()
 	if err != nil {
 		return err
 	}
 
-	println(s)
+	println(str)
 	return nil
 }
 
-func WritePixel(connection net.Conn, x int, y int, color color.Color) {
-	write(connection, fmt.Sprintf("PX %d %d %06x\n", x, y, makeColor(color)))
+func WritePixel(s Server, x int, y int, color color.Color) {
+	s.write(fmt.Sprintf("PX %d %d %06x\n", x, y, makeColor(color)))
 }
 
 func makeColor(color color.Color) uint32 {

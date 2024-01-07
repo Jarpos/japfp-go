@@ -3,7 +3,6 @@ package main
 import (
 	"Jarpos/japfp-go/communication"
 	"fmt"
-	"net"
 	"os"
 
 	"image"
@@ -12,25 +11,21 @@ import (
 	_ "image/png"
 )
 
-const (
-	SERVER_HOST = "127.0.0.1"
-	SERVER_PORT = "1337"
-	SERVER_TYPE = "tcp"
-)
-
 func main() {
-	connection, err := net.Dial(SERVER_TYPE, SERVER_HOST+":"+SERVER_PORT)
+	server := communication.CreateServer(127, 0, 0, 1, 1337)
+
+	err := server.Connect()
 	if err != nil {
 		panic(err)
 	}
-	defer connection.Close()
+	defer server.Disconnect()
 
-	x, y, err := communication.GetSize(connection)
+	x, y, err := communication.GetSize(server)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Connection to %s:%s established\n", SERVER_HOST, SERVER_PORT)
+	fmt.Printf("Connection to %s established\n", server.Host.String())
 	fmt.Printf("Canvas size %dx%d (%d pixels)\n", x, y, x*y)
 
 	img, _ := readImage(os.Args[1])
@@ -38,13 +33,13 @@ func main() {
 		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
 	}
 
-	writeScreen(connection, x, y, fn)
+	writeScreen(server, x, y, fn)
 }
 
-func writeScreen(connection net.Conn, x int, y int, f func(int, int) color.Color) {
+func writeScreen(s communication.Server, x int, y int, f func(int, int) color.Color) {
 	for i := 0; i < x; i++ {
 		for j := 0; j < y; j++ {
-			communication.WritePixel(connection, i, j, f(i, j))
+			communication.WritePixel(s, i, j, f(i, j))
 		}
 	}
 }
