@@ -8,6 +8,9 @@ import (
 type Server struct {
 	Host       net.Addr
 	connection net.Conn
+
+	SizeX int
+	SizeY int
 }
 
 func CreateServer(b1 byte, b2 byte, b3 byte, b4 byte, port uint16) Server {
@@ -27,6 +30,16 @@ func (s *Server) Connect() error {
 	}
 
 	s.connection = c
+
+	x, y, err := GetSize(*s)
+	if err != nil {
+		return fmt.Errorf(
+			"could not get canvas size from server. %e", err)
+	}
+
+	s.SizeX = x
+	s.SizeY = y
+
 	return nil
 }
 

@@ -20,20 +20,15 @@ func main() {
 	}
 	defer server.Disconnect()
 
-	x, y, err := communication.GetSize(server)
-	if err != nil {
-		panic(err)
-	}
-
 	fmt.Printf("Connection to %s established\n", server.Host.String())
-	fmt.Printf("Canvas size %dx%d (%d pixels)\n", x, y, x*y)
+	fmt.Printf("Canvas size %dx%d (%d pixels)\n", server.SizeX, server.SizeY, server.SizeX*server.SizeY)
 
 	img, _ := readImage(os.Args[1])
 	fn := func(x int, y int) color.Color {
 		return img.At(x%img.Bounds().Max.X, y%img.Bounds().Max.Y)
 	}
 
-	writeScreen(server, x, y, fn)
+	writeScreen(server, server.SizeX, server.SizeY, fn)
 }
 
 func writeScreen(s communication.Server, x int, y int, f func(int, int) color.Color) {
