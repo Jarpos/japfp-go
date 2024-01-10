@@ -3,6 +3,7 @@ package main
 import (
 	"Jarpos/japfp-go/communication"
 	"Jarpos/japfp-go/writer"
+
 	"fmt"
 	"os"
 	"time"

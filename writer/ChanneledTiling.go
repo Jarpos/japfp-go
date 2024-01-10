@@ -2,6 +2,7 @@ package writer
 
 import (
 	"Jarpos/japfp-go/communication"
+
 	"fmt"
 	"sync"
 
