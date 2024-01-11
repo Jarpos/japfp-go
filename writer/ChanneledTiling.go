@@ -10,7 +10,7 @@ import (
 	"image/color"
 )
 
-func ChanneledTiling(s communication.Server, img image.Image) {
+func ChanneledTiling(s communication.Server, img image.Image) error {
 	f := func(x int, y int) color.Color {
 		return img.At((x % img.Bounds().Max.X), (y % img.Bounds().Max.Y))
 	}
@@ -18,7 +18,10 @@ func ChanneledTiling(s communication.Server, img image.Image) {
 	tilesX := (s.SizeX / img.Bounds().Max.X) + 1
 	tilesY := (s.SizeY / img.Bounds().Max.Y) + 1
 
-	servers := GetServers(tilesX * tilesY)
+	servers, err := GetServers(tilesX * tilesY)
+	if err != nil {
+		return err
+	}
 	fmt.Printf("Writing %d tiles x=%d, y=%d\n", len(servers), tilesX, tilesY)
 
 	var wg sync.WaitGroup
@@ -31,13 +34,14 @@ func ChanneledTiling(s communication.Server, img image.Image) {
 				WriteTile(
 					servers[sid], f,
 					crect(x*img.Bounds().Dx(), y*img.Bounds().Dy()),
-					crect(img.Bounds().Dx(), img.Bounds().Dy()),
+					crect(img.Bounds().Max.X, img.Bounds().Max.Y),
 				)
-			}(&wg, y*tilesX+x, x, y)
+			}(&wg, ((y * tilesX) + x), x, y)
 		}
 	}
 
 	wg.Wait()
+	return nil
 }
 
 func WriteTile(
@@ -48,21 +52,23 @@ func WriteTile(
 
 	for x := 0; x < bounds.X; x++ {
 		for y := 0; y < bounds.Y; y++ {
-			communication.WritePixel(s, x+offset.X, y+offset.Y, f(x, y))
+			if x+offset.X < s.SizeX && y+offset.Y < s.SizeY {
+				communication.WritePixel(s, x+offset.X, y+offset.Y, f(x, y))
+			}
 		}
 	}
 }
 
-func GetServers(count int) []communication.Server {
+func GetServers(count int) ([]communication.Server, error) {
 	servers := make([]communication.Server, count)
 
 	for i := 0; i < count; i++ {
 		servers[i] = communication.CreateServer(127, 0, 0, 1, 1337)
 		err := servers[i].Connect()
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 	}
 
-	return servers
+	return servers, nil
 }
