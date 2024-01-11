@@ -6,8 +6,11 @@ import (
 	"image"
 )
 
-type Writer interface {
-	Write(communication.Server, image.Image)
+type WriterFunc = func(communication.Server, image.Image) error
+
+type Writer struct {
+	Writer WriterFunc
+	Help   string
 }
 
 type rect struct {
