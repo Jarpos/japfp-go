@@ -7,14 +7,16 @@ import (
 	"image/color"
 )
 
-func WriteTiling(s communication.Server, i image.Image) {
+func WriteTiling(s communication.Server, i image.Image) error {
 	f := func(x int, y int) color.Color {
 		return i.At(x%i.Bounds().Max.X, y%i.Bounds().Max.Y)
 	}
 
-	for i := 0; i < s.SizeX; i++ {
-		for j := 0; j < s.SizeY; j++ {
-			communication.WritePixel(s, i, j, f(i, j))
+	for x := 0; x < s.SizeX; x++ {
+		for y := 0; y < s.SizeY; y++ {
+			communication.WritePixel(s, x, y, f(x, y))
 		}
 	}
+
+	return nil
 }
