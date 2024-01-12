@@ -66,5 +66,5 @@ func printInfo() {
 func logTimings(server *communication.Server, elapsed time.Duration) {
 	f, _ := os.OpenFile("timings.log", (os.O_APPEND | os.O_CREATE | os.O_WRONLY), 0644)
 	defer f.Close()
-	fmt.Fprintf(f, "%d\t%d\t%dms\n", server.SizeX, server.SizeY, elapsed.Milliseconds())
+	fmt.Fprintf(f, "%d\t%d\t%dms\t%s\n", server.SizeX, server.SizeY, elapsed.Milliseconds(), os.Args[2])
 }
