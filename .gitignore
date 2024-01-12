@@ -1,6 +1,8 @@
 pixelflut/
 pixelpwnr*/
 
+*.log
+
 # GoLang Files
 *.exe
 *.exe~
