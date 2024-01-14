@@ -44,9 +44,7 @@ func main() {
 
 	writer.FUNCTIONS[settings.Writer].Writer(server, img)
 
-	elapsed := time.Since(start)
-	fmt.Printf("Time taken: %dms (roughly)\n", elapsed.Milliseconds())
-	logTimings(&server, elapsed, settings.Writer)
+	logTimings(&server, time.Since(start), settings.Writer)
 }
 
 func readImage(path string) (image.Image, error) {
@@ -87,4 +85,5 @@ func logTimings(server *communication.Server, elapsed time.Duration, writerStr s
 	f, _ := os.OpenFile("timings.log", (os.O_APPEND | os.O_CREATE | os.O_WRONLY), 0644)
 	defer f.Close()
 	fmt.Fprintf(f, "%d\t%d\t%dms\t%s\n", server.SizeX, server.SizeY, elapsed.Milliseconds(), writerStr)
+	fmt.Printf("Time taken: %dms (roughly)\n", elapsed.Milliseconds())
 }
