@@ -23,8 +23,6 @@ type Settings struct {
 }
 
 func main() {
-	start := time.Now()
-
 	settings := parseArgs()
 
 	server := communication.CreateServer(net.ParseIP(settings.Server), uint16(settings.Port))
@@ -42,9 +40,11 @@ func main() {
 		panic(err)
 	}
 
+	start := time.Now()
 	writer.FUNCTIONS[settings.Writer].Writer(server, img)
+	timeTaken := time.Since(start)
 
-	logTimings(&server, time.Since(start), settings.Writer)
+	logTimings(&server, timeTaken, settings.Writer)
 }
 
 func readImage(path string) (image.Image, error) {
