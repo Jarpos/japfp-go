@@ -26,8 +26,7 @@ func main() {
 	settings := parseArgs()
 
 	server := communication.CreateServer(net.ParseIP(settings.Server), uint16(settings.Port))
-	err := server.Connect()
-	if err != nil {
+	if err := server.Connect(); err != nil {
 		panic(err)
 	}
 	defer server.Disconnect()
