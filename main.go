@@ -3,9 +3,9 @@ package main
 import (
 	"Jarpos/japfp-go/communication"
 	"Jarpos/japfp-go/writer"
-	"net"
 
 	"fmt"
+	"net"
 	"os"
 	"time"
 

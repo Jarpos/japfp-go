@@ -2,9 +2,9 @@ package writer
 
 import (
 	"Jarpos/japfp-go/communication"
-	"net"
 
 	"fmt"
+	"net"
 	"sync"
 
 	"image"
