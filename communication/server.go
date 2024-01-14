@@ -13,10 +13,10 @@ type Server struct {
 	SizeY int
 }
 
-func CreateServer(b1 byte, b2 byte, b3 byte, b4 byte, port uint16) Server {
+func CreateServer(address net.IP, port uint16) Server {
 	return Server{
 		Host: &net.TCPAddr{
-			IP:   net.IPv4(b1, b2, b3, b4),
+			IP:   address,
 			Port: int(port),
 		},
 	}

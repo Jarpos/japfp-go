@@ -2,6 +2,7 @@ package writer
 
 import (
 	"Jarpos/japfp-go/communication"
+	"net"
 
 	"fmt"
 	"sync"
@@ -63,7 +64,7 @@ func GetServers(count int) ([]communication.Server, error) {
 	servers := make([]communication.Server, count)
 
 	for i := 0; i < count; i++ {
-		servers[i] = communication.CreateServer(127, 0, 0, 1, 1337)
+		servers[i] = communication.CreateServer(net.IPv4(127, 0, 0, 1), 1337)
 		err := servers[i].Connect()
 		if err != nil {
 			return nil, err

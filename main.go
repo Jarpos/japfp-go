@@ -3,6 +3,7 @@ package main
 import (
 	"Jarpos/japfp-go/communication"
 	"Jarpos/japfp-go/writer"
+	"net"
 
 	"fmt"
 	"os"
@@ -21,7 +22,7 @@ func main() {
 
 	start := time.Now()
 
-	server := communication.CreateServer(127, 0, 0, 1, 1337)
+	server := communication.CreateServer(net.IPv4(127, 0, 0, 1), 1337)
 	err := server.Connect()
 	if err != nil {
 		panic(err)
