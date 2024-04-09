@@ -31,5 +31,8 @@ Note: I'm throwing around the terms "thread" and "concurrency" with little regar
   - [ ] Image path
   - [ ] Image scale
   - [ ] Offset of where to put the image
+- [ ] Testing
+  - [ ] Write tests for functions where it makes sense
+  - [ ] Write benchmarks (using e.g. [iperf](https://iperf.fr/iperf-doc.php))
 
 This is just everything that came to mind, so some might not make sense.
